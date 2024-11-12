@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic des Plantes - Capture d'Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 15px 25px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Diagnostic des Plantes</h2>
+        <p>Pour diagnostiquer la maladie de votre plante, veuillez capturer une photo de celle-ci.</p>
+        <button onclick="takePhoto()">Prendre une photo</button>
+        
+        <video id="video" autoplay></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const button = document.querySelector('button');
+
+        // Demander l'accès à la caméra
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                alert("Impossible d'accéder à la caméra : " + error);
+            });
+
+        // Prendre une photo
+        function takePhoto() {
+            const context = canvas.getContext('2d');
+            // Définir la taille du canvas en fonction de la vidéo
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            // Dessiner l'image de la vidéo sur le canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            // Afficher l'image capturée sur le canvas
+            const imageUrl = canvas.toDataURL('image/png');
+            console.log("Photo prise : ", imageUrl);
+            alert("Photo capturée !");
+        }
+    </script>
+</body>
+</html>
